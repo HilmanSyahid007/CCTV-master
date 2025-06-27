@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Simulasi CCTV (Statis)</title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script type="text/javascript" src="js/webcam.js"></script>
+  <link rel="stylesheet" href="css/jquery.fs.zoomer.css">
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+
+    #upload_results {
+      background-color: red;
+      color: white;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    form input[type=button] {
+      margin-right: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Simulasi CCTV (Statis)</h2>
+
+  <!-- Webcam tampilan akan dibuat oleh webcam.js -->
+  <div id="webcam-container"></div>
+
+  <!-- Tombol kontrol -->
+  <form>
+    <input type="button" value="Konfigurasi" onclick="webcam.configure()">
+    <input type="button" value="Rekam Gambar" onclick="take_snapshot()">
+    <a href="gallery.php" style="text-decoration:none;">
+      <input type="button" value="Lihat Gambar">
+    </a>
+  </form>
+
+  <div id="upload_results">Status akan tampil di sini...</div>
+
+  <script>
+    // Inisialisasi webcam
+    document.getElementById('webcam-container').innerHTML = webcam.get_html(800, 600);
+    webcam.set_api_url('saveImage.php'); // Tidak akan jalan di GitHub Pages
+    webcam.set_quality(90);
+    webcam.set_shutter_sound(true);
+    webcam.set_hook('onComplete', 'my_completion_handler');
+
+    // Fungsi ambil gambar
+    function take_snapshot() {
+      webcam.freeze();
+      let konfirmasi = confirm("Simpan gambar?");
+      if (konfirmasi) {
+        document.getElementById("upload_results").innerText = "Menyimpan gambar (simulasi)...";
+        webcam.upload(); // Tidak akan berhasil tanpa backend
+      } else {
+        document.getElementById("upload_results").innerText = "Gambar tidak tersimpan.";
+        webcam.reset();
+      }
+    }
+
+    // Simulasi handler upload
+    function my_completion_handler(msg) {
+      if (msg.match(/(http\:\/\/\S+)/)) {
+        document.getElementById('upload_results').innerText = 'Penyimpanan berhasil!';
+        webcam.reset();
+      } else {
+        alert("PHP Error (simulasi): " + msg);
+      }
+    }
+  </script>
+  <script src="js/jquery.fs.zoomer.js"></script>
+  <script src="js/webcam.js"></script>
+
+</body>
+</html>

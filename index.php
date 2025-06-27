@@ -77,7 +77,7 @@
 </form>
 	
 <!-- pesan sukses -->
-<div id="upload_results" style="background-color:;color:red;"></div>
+<div id="upload_results" style="background-color:red; "></div>
 
 </body>
 </html>
